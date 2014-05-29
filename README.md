@@ -1,6 +1,6 @@
 #What it this?
 
-Tilecam is a Blender add-on that makes it easy to render seamlessly repeatable images.
+Tilecam is a [Blender](http://blender.org) [add-on](http://wiki.blender.org/index.php/Doc:2.6/Manual/Extensions/Python/Add-Ons) that makes it easy to render seamlessly repeatable images.
 
 #Getting started
 
