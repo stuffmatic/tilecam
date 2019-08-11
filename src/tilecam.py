@@ -1,6 +1,6 @@
 '''
 Tilecam
-Copyright (C) 2012  Per Gantelius
+Copyright (C) 2019  Per Gantelius
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,22 +20,24 @@ import bpy
 import math
 import fractions
 
-bl_info = { \
+bl_info = {
     'name': 'Tilecam',
     'author': 'Per Gantelius',
-    'version': (0, 0, 1),
-    'blender': (2, 6, 0),
+    'version': (1, 0, 0),
+    'blender': (2, 80, 0),
     'location': 'Properties editor > Camera panel > Orthographic tile camera',
-    'description': 'Automatic orthographic camera alignment to facilitate rendering of seamlessly tileable images.',
+    'description': 'Automates setting up an orthographic cameras for rendering seamlessly repeatable images',
     'tracker_url': 'https://github.com/stuffmatic/tilecam/issues',
     'wiki_url': 'https://github.com/stuffmatic/tilecam/wiki',
     'support': 'COMMUNITY',
-    'category': 'Render'}
+    'category': 'Render'
+}
     
 isometricElevation = 35.264
 
 class OrthographicTileCameraPanel(bpy.types.Panel):    
-    bl_label = "Orthographic tile camera"    
+    bl_idname = "TILECAM_PT_propspanel"
+    bl_label = "Repeatable Orthographic Viewport"    
     bl_space_type = "PROPERTIES"    
     bl_region_type = "WINDOW"
     bl_context = "data"
@@ -66,9 +68,9 @@ class OrthographicTileCameraPanel(bpy.types.Panel):
 
 class OrthographicTileCameraOperator(bpy.types.Operator):
     bl_idname = "camera.orthographic_tile_camera"    
-    bl_label = "Align camera"
+    bl_label = "Apply"
     
-    bl_description = "Aligns the currently selected camera"
+    bl_description = "Applies the settings to the camera"
 
     def execute(self, context):
         scn = bpy.context.scene
@@ -122,7 +124,7 @@ class OrthographicTileCameraOperator(bpy.types.Operator):
         cam.data.ortho_scale = xTileCount * n / math.cos(azimuth)
 
         scn.render.resolution_y = imageHeight
-        return{'FINISHED'}        
+        return {'FINISHED'}        
     
 def initSceneProps():
     maxPeriod = 10
@@ -130,18 +132,22 @@ def initSceneProps():
 
     bpy.types.Scene.xPeriod = bpy.props.IntProperty(name = "Horizontal period", default = 1, min=1, max=maxPeriod, description="The number of horizontal repetitions per tile")
     bpy.types.Scene.yPeriod = bpy.props.IntProperty(name = "Vertical period", default = 1, min=1, max=maxPeriod, description="The number of vertical repetitions per tile")
-    bpy.types.Scene.elevation = bpy.props.FloatProperty(name = "Elevation", default = 45, min=0, max=90, description="The camera elevation, i.e the amount of vertical stretch. 90 degrees is top down.")
+    bpy.types.Scene.elevation = bpy.props.FloatProperty(name = "Elevation", default = 45, min=0, max=90, description="The camera elevation, i.e the amount of vertical stretch (90 degrees is top down)")
+    bpy.types.Scene.imageSize = bpy.props.IntProperty(name = "Repetition count", default = 1, min=1, max=maxTileCount, description="Controls the number of repeatable tiles in the final image")
+    bpy.types.Scene.isIsometric = bpy.props.BoolProperty(name = "Isometric", default = False, description="Override the current orientation settings and produce an isometric view")        
 
-    bpy.types.Scene.imageSize = bpy.props.IntProperty(name = "Image size", default = 1, min=1, max=maxTileCount, description="The size of the final image expressed as the number of tiles in the horizontal and vertical directions.")
-    
-    bpy.types.Scene.isIsometric = bpy.props.BoolProperty(name = "Isometric", default = False, description="Override the current orientation settings and produce an isometric view.")
-        
+classes = (OrthographicTileCameraPanel, OrthographicTileCameraOperator)
+
 def register():
     initSceneProps()
-    bpy.utils.register_module(__name__) 
+    from bpy.utils import register_class
+    for cls in classes:
+        register_class(cls)
      
 def unregister():
-    bpy.utils.unregister_module(__name__)
+    from bpy.utils import unregister_class
+    for cls in reversed(classes):
+        unregister_class(cls)
     
 if __name__ == "__main__":
     register()
