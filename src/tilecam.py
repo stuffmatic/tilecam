@@ -32,8 +32,9 @@ bl_info = {
     'support': 'COMMUNITY',
     'category': 'Render'
 }
-    
-isometricElevation = 35.264
+
+# The camera elevation in degrees needed to get an isometric projection
+ISOMETRIC_ELEVATION = 35.264
 
 class OrthographicTileCameraPanel(bpy.types.Panel):    
     bl_idname = "TILECAM_PT_propspanel"
@@ -44,18 +45,18 @@ class OrthographicTileCameraPanel(bpy.types.Panel):
 
     def draw(self, context):
         scn = bpy.context.scene
-        isIsometric = scn.isIsometric
+        is_isometric = scn.tilecam_is_isometric
         l = self.layout
         
         r = l.row()
-        r.enabled = not isIsometric
-        r.prop(scn, "xPeriod")
-        r.prop(scn, "yPeriod")
-        r.prop(scn, "elevation")
+        r.enabled = not is_isometric
+        r.prop(scn, "tilecam_x_period")
+        r.prop(scn, "tilecam_y_period")
+        r.prop(scn, "tilecam_elevation")
         
         r = l.row()
-        r.prop(scn, "imageSize")
-        r.prop(scn, "isIsometric")        
+        r.prop(scn, "tilecam_repetition_count")
+        r.prop(scn, "tilecam_is_isometric")        
         
         r = l.row()
         r.operator("camera.orthographic_tile_camera")
@@ -74,70 +75,96 @@ class OrthographicTileCameraOperator(bpy.types.Operator):
 
     def execute(self, context):
         scn = bpy.context.scene
-        isIsometric = scn.isIsometric
+        isIsometric = scn.tilecam_is_isometric
         
         if isIsometric:
-            elevation = -isometricElevation * math.pi / 180
-            xPeriod = 1
-            yPeriod = 1
+            elevation = -ISOMETRIC_ELEVATION * math.pi / 180
+            x_period = 1
+            y_period = 1
         else:
             elevation = -scn.elevation * math.pi / 180
-            xPeriod = scn.xPeriod
-            yPeriod = scn.yPeriod
+            x_period = scn.tilecam_x_period
+            y_period = scn.tilecam_y_period
             
-        xTileCount = scn.imageSize
+        x_tile_count = scn.tilecam_repetition_count
      
         cam = scn.camera
         if not cam:
-            #no camera. do nothing
-            return{'CANCELLED'}
+            # No camera. do nothing
+            return {'CANCELLED'}
     
         cam.data.type = 'ORTHO'
         
-        azimuth = math.atan2(yPeriod, xPeriod)
+        azimuth = math.atan2(y_period, x_period)
         
-        '''
-            adjust the elevation so that aspectRatio * width 
-            (i.e the image height) is an integer number of pixels
-        '''
-        imageWidth = scn.render.resolution_x
-        #compute the height based on the current elevation
-        unadjustedAspectRatio = math.cos(math.pi / 2 + elevation)
-        unadjustedHeight = unadjustedAspectRatio * imageWidth
-        #round the height to the nearest integer...
-        imageHeight = int(unadjustedHeight + 0.5)
-        adjustedAspectRatio = imageHeight / float(imageWidth)
-        #...and compute an adjusted elevation angle 
-        adjustedElevation = math.acos(adjustedAspectRatio) - math.pi / 2
+        # Adjust the elevation so that aspect_ratio * width 
+        # (i.e the image height) is an integer number of pixels
+        image_width = scn.render.resolution_x
+        # 1. Compute the height based on the current elevation
+        unadjusted_aspect_ratio = math.cos(math.pi / 2 + elevation)
+        unadjusted_height = unadjusted_aspect_ratio * image_width
+        # 2. Round the height to the nearest integer...
+        image_height = int(unadjusted_height + 0.5)
+        adjusted_aspect_ratio = image_height / float(image_width)
+        # 3. Compute an adjusted elevation angle 
+        adjusted_elevation = math.acos(adjusted_aspect_ratio) - math.pi / 2
         
-        #print("adjusted elevation from", elevation, "to", adjustedElevation)
-        #print("width * aspect ratio         =", imageWidth * unadjustedAspectRatio)
-        #print("width * adjusted aspect ratio=", imageWidth * adjustedAspectRatio)
-    
-        #a camera with a unit orientation is looking down the positive
-        #y axis to match the blender front view.
-        cam.rotation_euler = [math.pi / 2 + adjustedElevation, 0, azimuth]
+        # Set the camera orientation. 
+        # A camera with a unit orientation is looking down the positive
+        # y axis to match the blender front view.
+        cam.rotation_euler = [math.pi / 2 + adjusted_elevation, 0, azimuth]
         
-        n = abs(xPeriod) / fractions.gcd(xPeriod, yPeriod)
-        cam.data.ortho_scale = xTileCount * n / math.cos(azimuth)
-
-        scn.render.resolution_y = imageHeight
+        # Compute the orthographic scale of the camera
+        n = abs(x_period) / fractions.gcd(x_period, y_period)
+        cam.data.ortho_scale = x_tile_count * n / math.cos(azimuth)
+        
+        # Set the viewport dimensions
+        scn.render.resolution_y = image_height
+        
         return {'FINISHED'}        
     
-def initSceneProps():
-    maxPeriod = 10
-    maxTileCount = 10
+def init_scene_props():
+    max_period = 10
+    max_tile_count = 10
 
-    bpy.types.Scene.xPeriod = bpy.props.IntProperty(name = "Horizontal period", default = 1, min=1, max=maxPeriod, description="The number of horizontal repetitions per tile")
-    bpy.types.Scene.yPeriod = bpy.props.IntProperty(name = "Vertical period", default = 1, min=1, max=maxPeriod, description="The number of vertical repetitions per tile")
-    bpy.types.Scene.elevation = bpy.props.FloatProperty(name = "Elevation", default = 45, min=0, max=90, description="The camera elevation, i.e the amount of vertical stretch (90 degrees is top down)")
-    bpy.types.Scene.imageSize = bpy.props.IntProperty(name = "Repetition count", default = 1, min=1, max=maxTileCount, description="Controls the number of repeatable tiles in the viewport")
-    bpy.types.Scene.isIsometric = bpy.props.BoolProperty(name = "Isometric", default = False, description="Override the current orientation settings and produce an isometric view")        
+    bpy.types.Scene.tilecam_x_period = bpy.props.IntProperty(
+        name = "Horizontal period", 
+        default = 1, 
+        min=1, 
+        max=max_period, 
+        description="The number of horizontal repetitions per tile"
+    )
+    bpy.types.Scene.tilecam_y_period = bpy.props.IntProperty(
+        name = "Vertical period", 
+        default = 1, 
+        min=1, 
+        max=max_period, 
+        description="The number of vertical repetitions per tile"
+    )
+    bpy.types.Scene.tilecam_elevation = bpy.props.FloatProperty(
+        name = "Elevation", 
+        default = 45, 
+        min=0, 
+        max=90, 
+        description="The camera elevation, i.e the amount of vertical stretch (90 degrees is top down)"
+    )
+    bpy.types.Scene.tilecam_repetition_count = bpy.props.IntProperty(
+        name = "Repetition count", 
+        default = 1, 
+        min=1, 
+        max=max_tile_count, 
+        description="Controls the number of repeatable tiles in the viewport"
+    )
+    bpy.types.Scene.tilecam_is_isometric = bpy.props.BoolProperty(
+        name = "Isometric", 
+        default = False, 
+        description="Override the current orientation settings and produce an isometric view"
+    ) 
 
 classes = (OrthographicTileCameraPanel, OrthographicTileCameraOperator)
 
 def register():
-    initSceneProps()
+    init_scene_props()
     from bpy.utils import register_class
     for cls in classes:
         register_class(cls)
