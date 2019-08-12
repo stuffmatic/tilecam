@@ -75,9 +75,9 @@ class OrthographicTileCameraOperator(bpy.types.Operator):
 
     def execute(self, context):
         scn = bpy.context.scene
-        isIsometric = scn.tilecam_is_isometric
+        is_isometric = scn.tilecam_is_isometric
         
-        if isIsometric:
+        if is_isometric:
             elevation = -ISOMETRIC_ELEVATION * math.pi / 180
             x_period = 1
             y_period = 1
