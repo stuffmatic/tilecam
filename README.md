@@ -6,7 +6,7 @@ Tilecam is a [Blender](http://blender.org) add-on that makes it easy to render s
 
 # Installing
 
-Download the latest version from [the releases page](https://github.com/stuffmatic/tilecam/releases). Make sure you download the file called `tilecam-x.y.z.py`.
+Download the latest version from [the releases page](https://github.com/stuffmatic/tilecam/releases). Make sure you download the file called `tilecam.py` attached to the release.
 
 Open the preferences window by selecting Preferences from the Edit menu
 
