@@ -82,7 +82,7 @@ class OrthographicTileCameraOperator(bpy.types.Operator):
             x_period = 1
             y_period = 1
         else:
-            elevation = -scn.elevation * math.pi / 180
+            elevation = -scn.tilecam_elevation * math.pi / 180
             x_period = scn.tilecam_x_period
             y_period = scn.tilecam_y_period
             
