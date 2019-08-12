@@ -93,8 +93,6 @@ class OrthographicTileCameraOperator(bpy.types.Operator):
             return{'CANCELLED'}
     
         cam.data.type = 'ORTHO'
-        cam.data.clip_start = 0.0001
-        cam.data.clip_end = 1000
         
         azimuth = math.atan2(yPeriod, xPeriod)
         
