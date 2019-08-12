@@ -5,9 +5,25 @@ Tilecam is a [Blender](http://blender.org) add-on that makes it easy to render s
 ![Tilecam example](readme_images/trafficjam.jpg)
 
 # Installing
-1. [Download the latest release](https://github.com/stuffmatic/tilecam/releases), decompress the file and locate the actual add-on file ```src/tilecam.py```.
-2. [Install](http://wiki.blender.org/index.php/Doc:2.6/Manual/Extensions/Python/Add-Ons)
-3. Check out the [tutorial video](https://vimeo.com/50302862) and [read the user's guide](https://github.com/stuffmatic/tilecam/wiki/User%27s-guide).
+
+Download the latest version from [the releases page](https://github.com/stuffmatic/tilecam/releases). Make sure you download the file called `tilecam-x.y.z.py`.
+
+Open the preferences window by selecting Preferences from the Edit menu
+
+![Edit -> Preferences](readme_images/help_edit_preferences.png)
+
+Select the _Add-ons_ tab and press the _Install_ button
+
+![Install add-on](readme_images/help_addons_install.png)
+
+Select the file you downloaded in the first step and press _Install Add-on from file_
+
+![Select the zip file](readme_images/help_select_zip.png)
+
+Locate the Tilecam add-on list and enable it by pressing the checkbox.
+
+![Enable add-on](readme_images/help_enable_addon.png)
+
 
 # Using Tilecam
 
@@ -36,7 +52,7 @@ Use the **Apply** button to align the currently selected camera.
 
 The following examples, using equally spaced cubic boxes, illustrate how the parameters affect the final image.   
 
-__Horizontal period__: 1, __Vertical period__: 1, __Elevation: 24°__, __Repetition count: 2__
+__Horizontal period__: 1, __Vertical period__: 1, __Elevation: 24°__, __Repetition count__: 2
 ![Boxes 1, 1, 24, 2](readme_images/boxes_1_1_24_2.png)
 
 __Horizontal period__: 3, __Vertical period__: 1, __Elevation__: 30°, __Repetition count__: 1
