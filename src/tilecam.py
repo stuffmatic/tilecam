@@ -133,7 +133,7 @@ def initSceneProps():
     bpy.types.Scene.xPeriod = bpy.props.IntProperty(name = "Horizontal period", default = 1, min=1, max=maxPeriod, description="The number of horizontal repetitions per tile")
     bpy.types.Scene.yPeriod = bpy.props.IntProperty(name = "Vertical period", default = 1, min=1, max=maxPeriod, description="The number of vertical repetitions per tile")
     bpy.types.Scene.elevation = bpy.props.FloatProperty(name = "Elevation", default = 45, min=0, max=90, description="The camera elevation, i.e the amount of vertical stretch (90 degrees is top down)")
-    bpy.types.Scene.imageSize = bpy.props.IntProperty(name = "Repetition count", default = 1, min=1, max=maxTileCount, description="Controls the number of repeatable tiles in the final image")
+    bpy.types.Scene.imageSize = bpy.props.IntProperty(name = "Repetition count", default = 1, min=1, max=maxTileCount, description="Controls the number of repeatable tiles in the viewport")
     bpy.types.Scene.isIsometric = bpy.props.BoolProperty(name = "Isometric", default = False, description="Override the current orientation settings and produce an isometric view")        
 
 classes = (OrthographicTileCameraPanel, OrthographicTileCameraOperator)
