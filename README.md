@@ -24,7 +24,7 @@ Select the file you downloaded in the first step and press _Install Add-on from 
 
 ![Select the zip file](readme_images/help_select_zip.png)
 
-Locate the Tilecam add-on list and enable it by pressing the checkbox.
+Locate Tilecam in the add-on list and enable it by pressing the checkbox.
 
 ![Enable add-on](readme_images/help_enable_addon.png)
 
