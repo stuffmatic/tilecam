@@ -35,6 +35,14 @@ The Tilecam panel can be found in the properties editor under the camera tab (wh
 
 ![Tilecam screenshot](readme_images/screenshot.png)
 
+Given identical objects repeated along the Blender grid floor, one unit apart, tilecam sets up the camera so that the camera viewport can be seamlessly repeated. For example, this grid of Suzanne meshes...
+
+![Top down grid](readme_images/suzanne_grid.png)
+
+... looks like this seen through a camera set up by Tilecam. The viewport can be seamlessly repeated.
+
+![Top down grid](readme_images/suzanne_tile.png)
+
 Tilecam uses the current horizontal resolution when aligning the camera. If you want to change resolution, just change the horizontal resolution and press **Apply** again. An aligned camera can be moved freely as long as it's not rotated. 
 
 ## Parameters
