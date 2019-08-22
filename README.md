@@ -43,6 +43,8 @@ Given identical objects repeated along the Blender grid floor, one unit apart, t
 
 ![Top down grid](readme_images/suzanne_tile.png)
 
+If you're using Blender 2.8 or later, it's highly recommended to create a collection containing the geometry you want to repeat and then repeat it using collection instances.
+
 An aligned camera can be moved freely as long as it's not rotated. 
 
 Tilecam uses the current horizontal resolution when aligning the camera. If you want to change resolution, just change the horizontal resolution and press **Apply** again. 
