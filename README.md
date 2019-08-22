@@ -1,14 +1,16 @@
 # What it this?
 
-Tilecam is a [Blender](http://blender.org) add-on that makes it easy to render seamlessly repeatable images, like this one.
+Tilecam is a [Blender](http://blender.org) add-on that makes it easy to render seamlessly repeatable images. To see Tilecam in action, [check out this tutorial video](https://vimeo.com/50302862). 
+
+Here's a repeatable image rendered using tilecam...
 
 ![Tilecam example](readme_images/tile.jpg)
 
-Here's the result of repeating the image above.
+...and here's the result of repeating the image above.
 
 ![Tilecam example](readme_images/tiles.jpg)
 
-To see Tilecam in action, [check out this tutorial video](https://vimeo.com/50302862).
+
 
 # Installing
 
