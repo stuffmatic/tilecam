@@ -8,6 +8,8 @@ Here's the result of repeating the image above.
 
 ![Tilecam example](readme_images/tiles.jpg)
 
+To see Tilecam in action, [check out this tutorial video](https://vimeo.com/50302862).
+
 # Installing
 
 Download the latest version from [the releases page](https://github.com/stuffmatic/tilecam/releases). Make sure you download the file called `tilecam.py` attached to the release.
