@@ -18,13 +18,12 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 
 import bpy
 import math
-import fractions
 
 bl_info = {
     'name': 'Tilecam',
     'author': 'Per Gantelius',
-    'version': (1, 0, 0),
-    'blender': (2, 80, 0),
+    'version': (1, 0, 1),
+    'blender': (2, 93, 1),
     'location': 'Properties editor > Camera panel > Repeatable Orthographic Viewport',
     'description': 'Sets up orthographic cameras for rendering seamlessly repeatable images',
     'tracker_url': 'https://github.com/stuffmatic/tilecam/issues',
@@ -115,7 +114,7 @@ class OrthographicTileCameraOperator(bpy.types.Operator):
         cam.rotation_euler = [math.pi / 2 + adjusted_elevation, 0, azimuth]
         
         # Compute the orthographic scale of the camera
-        n = abs(x_period) / fractions.gcd(x_period, y_period)
+        n = abs(x_period) / math.gcd(x_period, y_period)
         cam.data.ortho_scale = x_tile_count * n / math.cos(azimuth)
         
         # Set the viewport dimensions
